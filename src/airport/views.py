@@ -2,6 +2,7 @@ from django.db.models import F, Count
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, mixins, filters
 from drf_spectacular.utils import extend_schema, extend_schema_view
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
 
 from airport.models import (
@@ -15,6 +16,7 @@ from airport.models import (
     City,
     Order
 )
+from airport.permissions import IsAdminOrIfAuthenticatedReadOnly
 from airport.serializers import (
     AirportSerializer,
     RouteSerializer,
@@ -78,12 +80,14 @@ class BaseFilterViewSet(viewsets.GenericViewSet):
 class CountryViewSet(CreateListViewSet):
     queryset = Country.objects.all()
     serializer_class = CountrySerializer
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
 
 @schema_tags("City")
 class CityViewSet(CreateListViewSet, BaseFilterViewSet):
     queryset = City.objects.select_related("country")
     serializer_class = CitySerializer
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
     filterset_fields = search_fields = ("name", "country__name")
 
     def get_serializer_class(self):
@@ -96,6 +100,7 @@ class CityViewSet(CreateListViewSet, BaseFilterViewSet):
 class AirportViewSet(CreateListViewSet, BaseFilterViewSet):
     queryset = Airport.objects.select_related("closest_big_city__country")
     serializer_class = AirportSerializer
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
     filterset_fields = ("name", "closest_big_city__name")
 
     def get_serializer_class(self):
@@ -118,6 +123,7 @@ class RouteViewSet(viewsets.ModelViewSet, BaseFilterViewSet):
         "destination__closest_big_city__country"
     )
     serializer_class = RouteSerializer
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
     filterset_fields = search_fields = ("source__name", "destination__name")
     ordering_fields = ("source__name", "destination__name", "distance")
 
@@ -133,12 +139,14 @@ class RouteViewSet(viewsets.ModelViewSet, BaseFilterViewSet):
 class AirplaneTypeViewSet(CreateListViewSet):
     queryset = AirplaneType.objects.all()
     serializer_class = AirplaneTypeSerializer
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
 
 @schema_tags("Airplane")
 class AirplaneViewSet(CreateListViewSet, BaseFilterViewSet):
     queryset = Airplane.objects.select_related("airplane_type")
     serializer_class = AirplaneSerializer
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
     filterset_fields = ("name", "airplane_type")
     ordering_fields = ("airplane_type",)
 
@@ -163,6 +171,7 @@ class FlightViewSet(viewsets.ModelViewSet, BaseFilterViewSet):
         "airplane__airplane_type",
     ).prefetch_related("crew")
     serializer_class = FlightSerializer
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
     filterset_fields = search_fields = ordering_fields = (
         "route__source__name",
         "route__destination__name",
@@ -193,6 +202,7 @@ class CrewViewSet(CreateListViewSet, BaseFilterViewSet):
     queryset = Crew.objects.all()
     serializer_class = CrewSerializer
     search_fields = ("first_name", "last_name")
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
 
 @schema_tags("Order")
@@ -204,6 +214,7 @@ class OrderViewSet(CreateListViewSet):
         "tickets__flight__airplane__airplane_type"
     )
     serializer_class = OrderSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_serializer_class(self):
         if self.action in ("list", "retrieve"):
