@@ -108,6 +108,8 @@ class CrewSerializer(serializers.ModelSerializer):
 
 
 class FlightSerializer(serializers.ModelSerializer):
+    free_seats = serializers.SerializerMethodField()
+
     class Meta:
         model = Flight
         fields = (
@@ -116,11 +118,21 @@ class FlightSerializer(serializers.ModelSerializer):
             "airplane",
             "departure_time",
             "arrival_time",
+            "free_seats",
             "crew"
         )
 
+    def get_free_seats(self, obj):
+        return getattr(obj, "free_seats", None)
+
 
 class FlightListSerializer(FlightSerializer):
+    route = serializers.CharField(source="route.name", read_only=True)
+    airplane = serializers.CharField(source="airplane.name", read_only=True)
+    crew = serializers.IntegerField(source="crew.count", read_only=True)
+
+
+class FlightRetrieveSerializer(FlightSerializer):
     route = serializers.CharField(source="route.name", read_only=True)
     airplane = serializers.CharField(source="airplane.name", read_only=True)
     crew = serializers.SlugRelatedField(
@@ -144,7 +156,7 @@ class TicketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ticket
-        fields = ("id", "row", "seat", "flight", "order")
+        fields = ("id", "row", "seat", "flight")
 
 
 class TicketListSerializer(TicketSerializer):
@@ -153,7 +165,11 @@ class TicketListSerializer(TicketSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField(read_only=True)
-    tickets = TicketListSerializer(many=True, read_only=True)
+    tickets = TicketSerializer(
+        many=True,
+        read_only=False,
+        allow_empty=False
+    )
 
     class Meta:
         model = Order
