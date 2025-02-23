@@ -1,5 +1,6 @@
 from django.db.models import F, Count
 from rest_framework import viewsets, mixins
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.viewsets import GenericViewSet
 
 from airport.models import (
@@ -34,6 +35,10 @@ from airport.serializers import (
 )
 
 
+@extend_schema_view(
+    list=extend_schema(tags=["Country"]),
+    create=extend_schema(tags=["Country"])
+)
 class CountryViewSet(
     mixins.CreateModelMixin,
     mixins.ListModelMixin,
@@ -43,6 +48,10 @@ class CountryViewSet(
     serializer_class = CountrySerializer
 
 
+@extend_schema_view(
+    list=extend_schema(tags=["City"]),
+    create=extend_schema(tags=["City"])
+)
 class CityViewSet(
     mixins.CreateModelMixin,
     mixins.ListModelMixin,
@@ -56,7 +65,10 @@ class CityViewSet(
             return CityListSerializer
         return self.serializer_class
 
-
+@extend_schema_view(
+    list=extend_schema(tags=["Airport"]),
+    create=extend_schema(tags=["Airport"])
+)
 class AirportViewSet(
     mixins.CreateModelMixin,
     mixins.ListModelMixin,
@@ -70,7 +82,14 @@ class AirportViewSet(
             return AirportListSerializer
         return self.serializer_class
 
-
+@extend_schema_view(
+    list=extend_schema(tags=["Route"]),
+    retrieve=extend_schema(tags=["Route"]),
+    create=extend_schema(tags=["Route"]),
+    update=extend_schema(tags=["Route"]),
+    partial_update=extend_schema(tags=["Route"]),
+    destroy=extend_schema(tags=["Route"]),
+)
 class RouteViewSet(viewsets.ModelViewSet):
     queryset = Route.objects.select_related(
         "source__closest_big_city__country",
@@ -85,7 +104,10 @@ class RouteViewSet(viewsets.ModelViewSet):
             return RouteRetrieveSerializer
         return self.serializer_class
 
-
+@extend_schema_view(
+    list=extend_schema(tags=["Airplane Type"]),
+    create=extend_schema(tags=["Airplane Type"])
+)
 class AirplaneTypeViewSet(
     mixins.CreateModelMixin,
     mixins.ListModelMixin,
@@ -94,7 +116,10 @@ class AirplaneTypeViewSet(
     queryset = AirplaneType.objects.all()
     serializer_class = AirplaneTypeSerializer
 
-
+@extend_schema_view(
+    list=extend_schema(tags=["Airplane"]),
+    create=extend_schema(tags=["Airplane"])
+)
 class AirplaneViewSet(
     mixins.CreateModelMixin,
     mixins.ListModelMixin,
@@ -108,7 +133,14 @@ class AirplaneViewSet(
             return AirplaneListSerializer
         return self.serializer_class
 
-
+@extend_schema_view(
+    list=extend_schema(tags=["Flight"]),
+    retrieve=extend_schema(tags=["Flight"]),
+    create=extend_schema(tags=["Flight"]),
+    update=extend_schema(tags=["Flight"]),
+    partial_update=extend_schema(tags=["Flight"]),
+    destroy=extend_schema(tags=["Flight"]),
+)
 class FlightViewSet(viewsets.ModelViewSet):
     queryset = Flight.objects.select_related(
         "route__source__closest_big_city__country",
@@ -134,7 +166,10 @@ class FlightViewSet(viewsets.ModelViewSet):
             return FlightRetrieveSerializer
         return self.serializer_class
 
-
+@extend_schema_view(
+    list=extend_schema(tags=["Crew"]),
+    create=extend_schema(tags=["Crew"])
+)
 class CrewViewSet(
     mixins.CreateModelMixin,
     mixins.ListModelMixin,
@@ -143,7 +178,10 @@ class CrewViewSet(
     queryset = Crew.objects.all()
     serializer_class = CrewSerializer
 
-
+@extend_schema_view(
+    list=extend_schema(tags=["Order"]),
+    create=extend_schema(tags=["Order"])
+)
 class OrderViewSet(
     mixins.CreateModelMixin,
     mixins.ListModelMixin,
