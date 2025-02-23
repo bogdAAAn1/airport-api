@@ -9,7 +9,7 @@ from airport.models import (
     Flight,
     Crew,
     Country,
-    City
+    City, Order, Ticket
 )
 from airport.serializers import (
     AirportSerializer,
@@ -19,10 +19,18 @@ from airport.serializers import (
     FlightSerializer,
     CrewSerializer,
     RouteListSerializer,
+    RouteRetrieveSerializer,
     CountrySerializer,
     CitySerializer,
     CityListSerializer,
-    AirportListSerializer, AirplaneListSerializer, FlightListSerializer, CrewListSerializer
+    AirportListSerializer,
+    AirplaneListSerializer,
+    FlightListSerializer,
+    # CrewListSerializer,
+    OrderSerializer,
+    TicketSerializer,
+    TicketListSerializer,
+    OrderListSerializer
 )
 
 
@@ -62,6 +70,8 @@ class RouteViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == "list":
             return RouteListSerializer
+        if self.action == "retrieve":
+            return RouteRetrieveSerializer
         return self.serializer_class
 
 
@@ -94,8 +104,27 @@ class CrewViewSet(viewsets.ModelViewSet):
     queryset = Crew.objects.all()
     serializer_class = CrewSerializer
 
+    # def get_serializer_class(self):
+    #     if self.action in ("list", "retrieve"):
+    #         return CrewListSerializer
+    #     return self.serializer_class
+
+
+class OrderViewSet(viewsets.ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+
     def get_serializer_class(self):
         if self.action in ("list", "retrieve"):
-            return CrewListSerializer
+            return OrderListSerializer
         return self.serializer_class
 
+
+class TicketViewSet(viewsets.ModelViewSet):
+    queryset = Ticket.objects.all()
+    serializer_class = TicketSerializer
+
+    def get_serializer_class(self):
+        if self.action in ("list", "retrieve"):
+            return TicketListSerializer
+        return self.serializer_class
