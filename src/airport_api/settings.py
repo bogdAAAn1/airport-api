@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     "airport",
     "user",
     "rest_framework",
-    "drf_spectacular"
+    "drf_spectacular",
+    "django_filters"
 ]
 
 MIDDLEWARE = [
@@ -133,9 +134,12 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_THROTTLE_CLASSES": [
         "rest_framework.throttling.AnonRateThrottle",
-        "rest_framework.throttling.UserRateThrottle",
+        "rest_framework.throttling.UserRateThrottle"
     ],
     "DEFAULT_THROTTLE_RATES": {"anon": "10/day", "user": "30/day"},
+    "DEFAULT_FILTER_BACKENDS": [
+        "django_filters.rest_framework.DjangoFilterBackend"
+    ]
 }
 
 SPECTACULAR_SETTINGS = {
@@ -147,6 +151,6 @@ SPECTACULAR_SETTINGS = {
         "deepLinking": True,
         "defaultModelRendering": "model",
         "defaultModelsExpandDepth": 2,
-        "defaultModelExpandDepth": 2,
+        "defaultModelExpandDepth": 2
     }
 }
