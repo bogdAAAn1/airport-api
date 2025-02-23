@@ -139,9 +139,9 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.UserRateThrottle"
     ),
     "DEFAULT_THROTTLE_RATES": {"anon": "10/day", "user": "30/day"},
-    "DEFAULT_FILTER_BACKENDS": (
+    "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend"
-    ),
+    ],
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
