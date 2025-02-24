@@ -78,14 +78,7 @@ class AirportViewSet(CreateListViewSet, BaseFilterViewSet):
         return self.serializer_class
 
 
-@extend_schema_view(
-    list=extend_schema(tags=["Route"]),
-    retrieve=extend_schema(tags=["Route"]),
-    create=extend_schema(tags=["Route"]),
-    update=extend_schema(tags=["Route"]),
-    partial_update=extend_schema(tags=["Route"]),
-    destroy=extend_schema(tags=["Route"]),
-)
+@extend_schema_tags("Route")
 class RouteViewSet(viewsets.ModelViewSet, BaseFilterViewSet):
     queryset = Route.objects.select_related(
         "source__closest_big_city__country",
@@ -125,14 +118,7 @@ class AirplaneViewSet(CreateListViewSet, BaseFilterViewSet):
         return self.serializer_class
 
 
-@extend_schema_view(
-    list=extend_schema(tags=["Flight"]),
-    retrieve=extend_schema(tags=["Flight"]),
-    create=extend_schema(tags=["Flight"]),
-    update=extend_schema(tags=["Flight"]),
-    partial_update=extend_schema(tags=["Flight"]),
-    destroy=extend_schema(tags=["Flight"]),
-)
+@extend_schema_tags("Flight")
 class FlightViewSet(viewsets.ModelViewSet, BaseFilterViewSet):
     queryset = Flight.objects.select_related(
         "route__source__closest_big_city__country",
