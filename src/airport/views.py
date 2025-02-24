@@ -1,10 +1,9 @@
 from django.db.models import F, Count
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, mixins, filters
-from drf_spectacular.utils import extend_schema, extend_schema_view
+from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.viewsets import GenericViewSet
 
+from airport.filters import BaseFilterViewSet
+from airport.schemas import *
 from airport.models import (
     Airport,
     Route,
@@ -37,25 +36,6 @@ from airport.serializers import (
     FlightRetrieveSerializer
 )
 
-SCHEMA_TAGS = {
-    "Country": ["Country"],
-    "City": ["City"],
-    "Airport": ["Airport"],
-    "Route": ["Route"],
-    "AirplaneType": ["Airplane Type"],
-    "Airplane": ["Airplane"],
-    "Flight": ["Flight"],
-    "Crew": ["Crew"],
-    "Order": ["Order"],
-}
-
-
-def schema_tags(model_name):
-    return extend_schema_view(
-        list=extend_schema(tags=SCHEMA_TAGS[model_name]),
-        create=extend_schema(tags=SCHEMA_TAGS[model_name])
-    )
-
 
 class CreateListViewSet(
     mixins.CreateModelMixin,
@@ -63,17 +43,6 @@ class CreateListViewSet(
     viewsets.GenericViewSet
 ):
     pass
-
-
-class BaseFilterViewSet(viewsets.GenericViewSet):
-    filter_backends = (
-        DjangoFilterBackend,
-        filters.SearchFilter,
-        filters.OrderingFilter
-    )
-    filterset_fields = ()
-    search_fields = ()
-    ordering_fields = ()
 
 
 @schema_tags("Country")
