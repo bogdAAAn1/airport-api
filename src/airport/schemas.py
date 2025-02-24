@@ -18,3 +18,14 @@ def schema_tags(model_name):
         list=extend_schema(tags=SCHEMA_TAGS[model_name]),
         create=extend_schema(tags=SCHEMA_TAGS[model_name])
     )
+
+
+def extend_schema_tags(model_name):
+    return extend_schema_view(
+        list=extend_schema(tags=SCHEMA_TAGS[model_name]),
+        retrieve=extend_schema(tags=SCHEMA_TAGS[model_name]),
+        create=extend_schema(tags=SCHEMA_TAGS[model_name]),
+        update=extend_schema(tags=SCHEMA_TAGS[model_name]),
+        partial_update=extend_schema(tags=SCHEMA_TAGS[model_name]),
+        destroy=extend_schema(tags=SCHEMA_TAGS[model_name])
+    )
