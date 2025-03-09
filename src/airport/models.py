@@ -222,17 +222,9 @@ class Ticket(models.Model):
             ValidationError
         )
 
-    def save(
-        self,
-        force_insert=False,
-        force_update=False,
-        using=None,
-        update_fields=None,
-    ):
+    def save(self, *args, **kwargs):
         self.full_clean()
-        return super(Ticket, self).save(
-            force_insert, force_update, using, update_fields
-        )
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return (
@@ -240,5 +232,9 @@ class Ticket(models.Model):
         )
 
     class Meta:
-        unique_together = ("flight", "row", "seat")
+        constraints = [
+            UniqueConstraint(
+                fields=("flight", "row", "seat"), name="unique_ticket"
+            )
+        ]
         ordering = ("row", "seat")

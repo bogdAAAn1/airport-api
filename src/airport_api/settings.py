@@ -15,6 +15,8 @@ from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 
+from airport.permissions import IsAdminOrIfAuthenticatedReadOnly
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -155,6 +157,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 10,
     "MAX_PAGE_SIZE": 20,
+    "DEFAULT_PERMISSION_CLASSES": IsAdminOrIfAuthenticatedReadOnly,
 }
 
 SPECTACULAR_SETTINGS = {
