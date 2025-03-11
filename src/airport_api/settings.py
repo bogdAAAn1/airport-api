@@ -15,8 +15,6 @@ from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 
-from airport.permissions import IsAdminOrIfAuthenticatedReadOnly
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -90,14 +88,14 @@ WSGI_APPLICATION = "airport_api.wsgi.application"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-   "default": {
-       "ENGINE": "django.db.backends.postgresql",
-       "NAME": os.environ["POSTGRES_DB"],
-       "USER": os.environ["POSTGRES_USER"],
-       "PASSWORD": os.environ["POSTGRES_PASSWORD"],
-       "HOST": os.environ["POSTGRES_HOST"],
-       "PORT": int(os.environ["POSTGRES_DB_PORT"]),
-   }
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ["POSTGRES_DB"],
+        "USER": os.environ["POSTGRES_USER"],
+        "PASSWORD": os.environ["POSTGRES_PASSWORD"],
+        "HOST": os.environ["POSTGRES_HOST"],
+        "PORT": int(os.environ["POSTGRES_DB_PORT"]),
+    }
 }
 
 # Password validation
@@ -157,7 +155,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 10,
     "MAX_PAGE_SIZE": 20,
-    "DEFAULT_PERMISSION_CLASSES": IsAdminOrIfAuthenticatedReadOnly,
+    "DEFAULT_PERMISSION_CLASSES": "airport.permissions.IsAdminOrIfAuthenticatedReadOnly",
 }
 
 SPECTACULAR_SETTINGS = {
